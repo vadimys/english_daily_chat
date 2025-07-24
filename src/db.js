@@ -76,8 +76,7 @@ function getWordsByDate(date) {
     return new Promise((resolve, reject) => {
         db.all(`SELECT *
                 FROM words
-                WHERE date_sent = ?
-                  AND status = 'unknown'`, [date], (err, rows) => {
+                WHERE date_sent = ?`, [date], (err, rows) => {
             if (err) return reject(err);
             resolve(rows);
         });

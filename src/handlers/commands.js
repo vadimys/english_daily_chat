@@ -38,7 +38,7 @@ module.exports = function(bot) {
                 );
             }
         } else {
-            await ctx.reply('⏳ Генерую нову добірку слів...', mainKeyboard);
+            await ctx.reply('⏳ Генерую нову добірку слів...', worksKeyboard);
             try {
                 const wordsText = await getWordsFromGPT(prompt);
                 const wordsArray = await parseWords(wordsText);

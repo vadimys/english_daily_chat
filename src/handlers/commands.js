@@ -17,7 +17,7 @@ module.exports = function(bot) {
             ctx.reply('⏳ Надсилаю невивчені слова...');
             for (const word of unknownWords) {
                 await ctx.reply(
-                    `${word.word} [${word.transcription}] — ${word.translation}\nExample: ${word.example}`,
+                    `<b>${word.word}</b> [${word.transcription}] — <i>${word.translation}</i>\nExample: ${word.example}`,
                     wordKeyboard(word.id)
                 );
             }
@@ -30,7 +30,7 @@ module.exports = function(bot) {
                 saveWordsToDB(wordsArray);
                 for (const w of wordsArray) {
                     await ctx.reply(
-                        `${w.word} [${w.transcription}] — ${w.translation}\nExample: ${w.example}`,
+                        `<b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>\nExample: ${w.example}`,
                         wordKeyboard(null) // wordId з’явиться після вставки в БД, тут для MVP можна спростити, або оновити saveWordsToDB, щоб вертати id
                     );
                 }
@@ -53,7 +53,7 @@ module.exports = function(bot) {
         try {
             const words = await getUnknownWords(100);
             if (!words.length) return ctx.reply('Немає невивчених слів!');
-            const text = words.map((w, idx) => `${idx+1}. ${w.word} [${w.transcription}] — ${w.translation}`).join('\n');
+            const text = words.map((w, idx) => `${idx+1}. <b>${w.word}</b>> [${w.transcription}] — <i>${w.translation}</i>`).join('\n');
             ctx.reply('❌ Невивчені слова:\n\n' + text);
         } catch (e) {
             ctx.reply('❗ Помилка при отриманні невивчених слів: ' + (e.message || e));
@@ -66,7 +66,7 @@ module.exports = function(bot) {
         const words = await getUnknownWords(10);
         if (!words.length) return ctx.reply('Всі слова на сьогодні вже розібрано. Використай /words для нової добірки.');
         const text = words.map((w, idx) =>
-            `${idx+1}. ${w.word} [${w.transcription}] — ${w.translation}`).join('\n');
+            `${idx+1}. <b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>`).join('\n');
         ctx.reply('📝 Слова на сьогодні:\n\n' + text);
     });
 

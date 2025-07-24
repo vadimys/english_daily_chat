@@ -9,7 +9,7 @@ const bot = new Telegraf(TELEGRAM_TOKEN);
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 // 1. Замініть на свій Telegram user ID
-const userId = YOUR_TELEGRAM_USER_ID; // Наприклад: const userId = 123456789;
+const userId = null; // Наприклад: const userId = 123456789;
 
 // Вітальне повідомлення
 bot.start((ctx) => {

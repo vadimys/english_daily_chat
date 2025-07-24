@@ -1,6 +1,6 @@
 const { getWordsFromGPT } = require('../gpt');
 const { parseWords } = require('../utils/parser');
-const { saveWordsToDB, getLearnedWords, getUnknownWords } = require('../db');
+const { saveWordsToDB, getLearnedWords, getUnknownWords, getWordsByDate } = require('../db');
 const { prompt } = require('../config');
 const { wordKeyboard, reWordKeyboard } = require('../utils/wordKeyboard');
 const { startKeyboard, mainKeyboard, worksKeyboard } = require('../keyboards');
@@ -33,7 +33,7 @@ module.exports = function(bot) {
             await ctx.reply('⏳ Надсилаю невивчені слова...', worksKeyboard);
             for (const word of unknownWords) {
                 await ctx.reply(
-                    `<b>${word.word}</b> [${word.transcription}] — <i>${word.translation}</i>\n<b>Example:</b> ${word.example}`,
+                    `<b>${word.word}</b> [${word.transcription}] — <i>${word.translation}</i>\nExample: ${word.example}`,
                     { ...wordKeyboard(word.id), parse_mode: 'HTML' }
                 );
             }
@@ -41,12 +41,17 @@ module.exports = function(bot) {
             await ctx.reply('⏳ Генерую нову добірку слів...', mainKeyboard);
             try {
                 const wordsText = await getWordsFromGPT(prompt);
-                const wordsArray = parseWords(wordsText);
+                const wordsArray = await parseWords(wordsText);
                 await saveWordsToDB(wordsArray);
-                for (const w of wordsArray) {
+
+                // отримуємо тільки-но додані слова з БД (по сьогоднішній даті)
+                const now = new Date().toISOString().split('T')[0];
+                const newWords = await getWordsByDate(now);
+
+                for (const w of newWords) {
                     await ctx.reply(
-                        `<b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>\n<b>Example:</b> ${w.example}`,
-                        { ...reWordKeyboard(word.id), parse_mode: 'HTML' }
+                        `<b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>\nExample: ${w.example}`,
+                        { ...wordKeyboard(w.id), parse_mode: 'HTML' }
                     );
                 }
             } catch (e) {

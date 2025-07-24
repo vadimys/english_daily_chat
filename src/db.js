@@ -52,4 +52,13 @@ function updateWordStatus(wordId, status) {
     db.run(`UPDATE words SET status = ? WHERE id = ?`, [status, wordId]);
 }
 
-module.exports = { saveWordsToDB, getLearnedWords, getUnknownWords, updateWordStatus };
+function getWordsByDate(date) {
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM words WHERE date_sent = ? AND status = 'unknown'`, [date], (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows);
+        });
+    });
+}
+
+module.exports = { saveWordsToDB, getLearnedWords, getUnknownWords, updateWordStatus, getWordsByDate };

@@ -6,6 +6,7 @@ function parseWords(gptResponse) {
         const line = lines[i];
         const exampleLine = lines[i + 1];
         const match = line.match(/^\d+\.\s(.+?)\s\[(.+?)\]\s—\s(.+)$/);
+
         if (match && exampleLine && exampleLine.startsWith('Example:')) {
             const [, word, transcription, translation] = match;
             const example = exampleLine.replace('Example:', '').trim();

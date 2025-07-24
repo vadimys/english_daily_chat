@@ -3,7 +3,7 @@ const { parseWords } = require('../utils/parser');
 const { saveWordsToDB, getLearnedWords, getUnknownWords } = require('../db');
 const { prompt } = require('../config');
 const { wordKeyboard } = require('../utils/wordKeyboard');
-const { startKeyboard, mainKeyboard } = require('../keyboards');
+const { startKeyboard, mainKeyboard, worksKeyboard } = require('../keyboards');
 
 module.exports = function(bot) {
     bot.start((ctx) => {
@@ -30,10 +30,10 @@ module.exports = function(bot) {
     bot.command('words', async (ctx) => {
         const unknownWords = await getUnknownWords(10);
         if (unknownWords.length > 0) {
-            ctx.reply('⏳ Надсилаю невивчені слова...', mainKeyboard);
+            ctx.reply('⏳ Надсилаю невивчені слова...', worksKeyboard);
             for (const word of unknownWords) {
                 await ctx.reply(
-                    `<b>${word.word}</b> [${word.transcription}] — <i>${word.translation}</i>\nExample: ${word.example}`,
+                    `<b>${word.word}</b> [${word.transcription}] — <i>${word.translation}</i>\n<b>Example:</b> ${word.example}`,
                     { ...wordKeyboard(word.id), parse_mode: 'HTML' }
                 );
             }
@@ -45,7 +45,7 @@ module.exports = function(bot) {
                 saveWordsToDB(wordsArray);
                 for (const w of wordsArray) {
                     await ctx.reply(
-                        `<b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>\nExample: ${w.example}`,
+                        `<b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>\n<b>Example:</b> ${w.example}`,
                         { ...mainKeyboard, parse_mode: 'HTML' }
                     );
                 }

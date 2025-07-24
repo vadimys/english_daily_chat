@@ -31,7 +31,7 @@ function getLearnedWords() {
         db.all(`SELECT word, transcription, translation FROM words WHERE status = 'learned' GROUP BY word, transcription, translation`, [], (err, rows) => {
             if (err) return reject(err);
             if (!rows.length) return resolve('Твій словник поки порожній.');
-            const text = rows.map((r, idx) => `${idx+1}. ${r.word} [${r.transcription}] — ${r.translation}`).join('\n');
+            const text = rows.map((r, idx) => `<b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>`).join('\n');
             resolve('📚 Твій словник:\n\n' + text);
         });
     });

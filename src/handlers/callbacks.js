@@ -8,12 +8,12 @@ module.exports = function(bot) {
         if (data.startsWith('learned_')) {
             const wordId = data.split('_')[1];
             updateWordStatus(wordId, 'learned');
-            newStatus = '\n(✅ Вивчене)';
+            newStatus = '\n<b>✅ Вивчене</b>';
             mark = '✅';
         } else if (data.startsWith('unknown_')) {
             const wordId = data.split('_')[1];
             updateWordStatus(wordId, 'unknown');
-            newStatus = '\n(❌ Не вивчене)';
+            newStatus = '\n<b>❌ Не вивчене</b>';
             mark = '❌';
         } else {
             ctx.answerCbQuery();
@@ -21,9 +21,8 @@ module.exports = function(bot) {
         }
         // Оновлюємо текст повідомлення: додаємо позначку до слова
         let oldText = ctx.update.callback_query.message.text;
-        // Уникаємо дублювання позначок
-        oldText = oldText.replace(/(\s)?\(✅ Вивчене\)|(\s)?\(❌ Не вивчене\)/g, '');
-        await ctx.editMessageText(oldText + newStatus);
+        oldText = oldText.replace(/\s?<b>✅ Вивчене<\/b>|\s?<b>❌ Не вивчене<\/b>/g, '');
+        await ctx.editMessageText(oldText + newStatus, { parse_mode: 'HTML' });
         await ctx.editMessageReplyMarkup(); // Прибираємо кнопки
         ctx.answerCbQuery(`Статус слова змінено ${mark}`);
     });

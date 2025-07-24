@@ -55,6 +55,7 @@ cron.schedule('30 6 * * *', async () => {
         const words = completion.choices[0].message.content;
         await bot.telegram.sendMessage(userId, `🗓 Щоденна добірка англійських слів:\n\n${words}`);
     } catch (e) {
+        ctx.reply('❗ Помилка: ' + JSON.stringify(e));
         await bot.telegram.sendMessage(userId, '❗ Помилка під час автоматичної відправки добірки.');
     }
 });

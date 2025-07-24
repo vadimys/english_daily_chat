@@ -28,8 +28,7 @@ db.serialize(() => {
     `);
 });
 
-function saveWordsToDB(wordsArray) {
-    const now = new Date().toISOString().split('T')[0];
+function saveWordsToDB(wordsArray, now) {
     wordsArray.forEach(w => {
         db.run(
             `INSERT INTO words (word, transcription, translation, example, date_sent, status)

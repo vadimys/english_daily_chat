@@ -44,12 +44,11 @@ module.exports = function(bot) {
                 const countPrompt = prompt.replace('${count}', WORDS_AMOUNT);
                 const wordsText = await getWordsFromGPT(countPrompt);
                 const wordsArray = await parseWords(wordsText);
+                const now = new Date().toISOString().split('T')[0];
                 console.log('GPT wordsArray:', wordsArray.length, wordsArray);
-                await saveWordsToDB(wordsArray);
+                await saveWordsToDB(wordsArray, now);
                 console.log('Збережено у БД:', wordsArray.length);
 
-                // отримуємо тільки-но додані слова з БД (по сьогоднішній даті)
-                const now = new Date().toISOString().split('T')[0];
                 const newWords = await getWordsByDate(now);
                 console.log('Отримано з БД:', newWords.length);
 

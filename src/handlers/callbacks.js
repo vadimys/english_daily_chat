@@ -8,12 +8,12 @@ module.exports = function(bot) {
         if (data.startsWith('learned_')) {
             const wordId = data.split('_')[1];
             updateWordStatus(wordId, 'learned');
-            newStatus = ' (✅ Вивчене)';
+            newStatus = '\n(✅ Вивчене)';
             mark = '✅';
         } else if (data.startsWith('unknown_')) {
             const wordId = data.split('_')[1];
             updateWordStatus(wordId, 'unknown');
-            newStatus = ' (❌ Не вивчене)';
+            newStatus = '\n(❌ Не вивчене)';
             mark = '❌';
         } else {
             ctx.answerCbQuery();

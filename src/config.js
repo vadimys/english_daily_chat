@@ -12,6 +12,7 @@ module.exports = {
 
 1. слово [транскрипція] — переклад
 Example: приклад речення англійською
+
 `,
     extraKeyboard: {
         reply_markup: {

@@ -1,30 +1,19 @@
-const { getWordsFromGPT } = require('../gpt');
-const { parseWords } = require('../utils/parser');
-const { saveWordsToDB } = require('../db');
-const { prompt, extraKeyboard } = require('../config');
+const { updateWordStatus } = require('../db');
 
 module.exports = function(bot) {
     bot.on('callback_query', async (ctx) => {
         const data = ctx.callbackQuery.data;
-        console.log('callback_query:', data, 'від', ctx.from.id);
-
-        if (data === 'remind_again') {
-            ctx.reply('🔁 Надсилаю добірку ще раз...');
-            try {
-                const wordsText = await getWordsFromGPT(prompt);
-                ctx.reply(wordsText, extraKeyboard);
-                const wordsArray = parseWords(wordsText);
-                saveWordsToDB(wordsArray);
-            } catch (e) {
-                ctx.reply('❗ Помилка при повторному нагадуванні: ' + (e.message || e));
-            }
+        if (data.startsWith('learned_')) {
+            const wordId = data.split('_')[1];
+            updateWordStatus(wordId, 'learned');
+            ctx.editMessageReplyMarkup(); // прибирає кнопки
+            ctx.reply('Слово додано до словника як вивчене!');
+        } else if (data.startsWith('unknown_')) {
+            const wordId = data.split('_')[1];
+            updateWordStatus(wordId, 'unknown');
+            ctx.editMessageReplyMarkup();
+            ctx.reply('Слово залишилось у списку невивчених!');
         }
-
-        if (data === 'skip_today') {
-            ctx.reply('⏭ Сьогоднішнє нагадування пропущено.');
-            console.log('Пропуск дня для', ctx.from.id);
-        }
-
         ctx.answerCbQuery();
     });
 };

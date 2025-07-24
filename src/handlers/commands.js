@@ -56,8 +56,8 @@ module.exports = function(bot) {
     });
 
     bot.command('today', async (ctx) => {
-        const words = await getUnknownWords(10);
-        if (!words.length) return ctx.reply('Всі слова на сьогодні вже розібрано. Використай /words для нової добірки.', mainKeyboard);
+        const words = await getUnknownWords(100); // отримати всі не вивчені
+        if (!words.length) return ctx.reply('Всі слова на сьогодні вже вивчені! Використай /words для нової добірки.', mainKeyboard);
         const text = words.map((w, idx) =>
             `${idx+1}. <b>${w.word}</b> [${w.transcription}] — <i>${w.translation}</i>`).join('\n');
         ctx.reply('📝 Слова на сьогодні:\n\n' + text, { ...mainKeyboard, parse_mode: 'HTML' });
